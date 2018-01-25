@@ -1,0 +1,2 @@
+# personalFinancesManager
+Web applications project
