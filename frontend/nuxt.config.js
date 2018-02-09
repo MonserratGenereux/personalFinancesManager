@@ -16,6 +16,9 @@ module.exports = {
   plugins: [
       {src: '~/plugins/firebase', ssr: false}
   ],
+  modules: [
+   'bootstrap-vue/nuxt'
+  ],
   /*
   ** Customize the progress bar color
   */
