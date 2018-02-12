@@ -1,47 +1,77 @@
 <template lang="html">
-  <div class="">
-      <h1>Add Payment Form</h1>
-      <b-form @submit="onSubmit" @reset="onReset" v-if="show">
-      <b-form-group id="exampleInputGroup1"
-                    label="Email address:"
-                    label-for="exampleInput1"
-                    description="We'll never share your email with anyone else.">
-        <b-form-input id="exampleInput1"
-                      type="email"
-                      v-model="form.email"
-                      required
-                      placeholder="Enter email">
-        </b-form-input>
-      </b-form-group>
-      <b-form-group id="exampleInputGroup2"
-                    label="Your Name:"
-                    label-for="exampleInput2">
-        <b-form-input id="exampleInput2"
-                      type="text"
-                      v-model="form.name"
-                      required
-                      placeholder="Enter name">
-        </b-form-input>
-      </b-form-group>
-      <b-form-group id="exampleInputGroup3"
-                    label="Payment Type:"
-                    label-for="exampleInput3">
-        <b-form-select id="exampleInput3"
-                      :options="methods"
-                      required
-                      v-model="form.method">
-        </b-form-select>
-      </b-form-group>
-      <b-form-group id="exampleGroup4" v-if="form.method == 'Debit Card'">
-        <b-form-checkbox-group v-model="form.checked" id="exampleChecks">
-          <b-form-checkbox value="me">Check me out</b-form-checkbox>
-          <b-form-checkbox value="that">Check that out</b-form-checkbox>
-        </b-form-checkbox-group>
-      </b-form-group>
-      <b-button type="submit" variant="primary">Submit</b-button>
-      <b-button type="reset" variant="danger">Reset</b-button>
-    </b-form>
-    {{form.method}}
+  <div class="add">
+      <div class="col-md-6 offset-3 add-form">
+          <h1>Add Payment</h1>
+          <b-form @submit="onSubmit" @reset="onReset" v-if="show" class="form">
+              <b-form-group id="exampleInputGroup1"
+                            label="Payment Type:"
+                            label-for="exampleInput1">
+                <b-form-select id="exampleInput1"
+                              :options="methods"
+                              required
+                              v-model="form.method">
+                </b-form-select>
+              </b-form-group>
+          <b-form-group id="exampleInputGroup2"
+                        label="Alias:"
+                        label-for="exampleInput2">
+            <b-form-input id="exampleInput2"
+                          type="text"
+                          v-model="form.alias"
+                          required
+                          placeholder="Enter alias">
+            </b-form-input>
+          </b-form-group>
+          <b-form-group id="exampleInputGroup3" v-if="form.method == 'Debit Card' || form.method == 'Credit Card'"
+                        label="Bank:"
+                        label-for="exampleInput3">
+            <b-form-select id="exampleInput3"
+                          :options="banks"
+                          required
+                          v-model="form.bank">
+            </b-form-select>
+          </b-form-group>
+          <b-form-group id="exampleInputGroup4" v-if="form.method == 'Debit Card' || form.method == 'Credit Card'"
+                        label="Bank Number:"
+                        label-for="exampleInput4">
+            <b-form-input id="exampleInput4"
+                           type="text"
+                           required
+                           placeholder="Enter Card Number">
+            </b-form-input>
+          </b-form-group>
+          <b-form-group id="exampleInputGroup5"
+                        label="Inicial Amount:"
+                        label-for="exampleInput5">
+            <b-form-input id="exampleInput5"
+                           type="text"
+                           v-model="form.amount"
+                           required
+                           placeholder="Enter the inicial amount">
+            </b-form-input>
+          </b-form-group>
+          <b-form-group id="exampleInputGroup6" v-if="form.method == 'Credit Card'"
+                        label="Due Date:"
+                        label-for="exampleInput6">
+            <b-form-input id="exampleInput6"
+                           type="text"
+                           v-model="form.dueDate"
+                           required
+                           placeholder="Enter Card due date">
+            </b-form-input>
+          </b-form-group>
+          <div class="buttons">
+              <div class="login-button">
+                  <b-button id="submit" class="btn btn-default" type="submit">Submit</b-button>
+
+              </div>
+              <div class="reset-button">
+                  <b-button id="reset" type="reset" variant="danger">Reset</b-button>
+
+              </div>
+          </div>
+        </b-form>
+      </div>
   </div>
 </template>
 
@@ -64,15 +94,20 @@ export default {
   data () {
     return {
       form: {
-        email: '',
-        name: '',
-        bank: '',
+        alias: '',
+        amount: '',
+        bankNumber: '',
         method: null,
-        checked: []
+        bank: null,
+        dueDate: ''
       },
       methods: [
         { text: 'Select One', value: null },
         'Credit Card', 'Debit Card', 'Cash'
+      ],
+      banks: [
+        { text: 'Select One', value: null },
+        'Santander', 'Bancomer', 'Banamex'
       ],
       show: true
     }
@@ -82,20 +117,31 @@ export default {
         evt.preventDefault()
         if (this.form) {
             paymentsRef.push({
-                email: this.form.email,
-                name: this.form.name,
                 method: this.form.method,
                 bank: this.form.bank,
+                alias: this.form.alias,
+                amount: this.form.amount,
+                dueDate: this.form.dueDate,
+                bankNumber: this.form.bankNumber
             })
         }
+        this.form.method = null;
+        this.form.bank = null;
+        this.form.alias = '';
+        this.form.amount = '';
+        this.form.dueDate = '';
+        this.form.bankNumber = '';
+        window.location = '../dashboard';
     },
     onReset (evt) {
       evt.preventDefault();
       /* Reset our form values */
-      this.form.email = '';
-      this.form.name = '';
-      this.form.food = null;
-      this.form.checked = [];
+      this.form.method = null;
+      this.form.bank = null;
+      this.form.alias = '';
+      this.form.amount = '';
+      this.form.dueDate = '';
+      this.form.bankNumber = '';
       /* Trick to reset/clear native browser form validation state */
       this.show = false;
       this.$nextTick(() => { this.show = true });
@@ -105,4 +151,40 @@ export default {
 </script>
 
 <style lang="css">
+h1{
+    color: rgb(199,129,119);
+    padding-left: 140px;
+    padding-top: 20px;
+    font-family: "Palatino Linotype", cursive, sans-serif;
+    font-weight: bold;
+    font-size: 50px;
+}
+.form{
+    padding-bottom: 50px;
+}
+.add-form{
+    margin-top: 50px;
+    background-color: rgba(234,215,215,0.7);
+}
+.add{
+    height: 800px;
+}
+.buttons{
+    padding-left: 200px;
+    padding-top: 20px;
+}
+#reset{
+    background-color: rgba(255,255,255,0.5);
+    color: rgba(198, 6, 6, 0.8);
+    border-color: rgba(234,215,215,0);
+}
+.reset-button{
+    padding-left: 120px;
+    margin-top: -37px;
+}
+#submit{
+    background-color: rgba(255,255,255,0.5);
+    color: rgba(6, 92, 198, 0.8);
+    border-color: rgba(234,215,215,0);
+}
 </style>
