@@ -3,6 +3,11 @@
       <div class="col-md-6 offset-3 register" >
           <h1>Welcome to Finantly</h1>
           <h2>Register</h2>
+          <!-- <form class="" action="" method="post">
+              First name: <input type="text" name="fname" v-model="form.email"><br>
+             Last name: <input type="text" name="lname" v-model="form.password"><br>
+             <button type="submit" value="Submit" @click="onSubmit()">enter</button>
+          </form> -->
           <b-form @submit="onSubmit" @reset="onReset" v-if="show" class="form">
           <b-form-group id="exampleInputGroup1"
                         label="Name:"
@@ -46,12 +51,11 @@
           </div>
         </b-form>
       </div>
-
-
   </div>
 </template>
 
 <script>
+import Vue from 'vue'
 import firebase from 'firebase'
 // Initialize Firebase
 var config = {
@@ -67,37 +71,34 @@ var db = firebaseApp.database()
 var usersRef = db.ref('users')
 
 export default {
-  data () {
-    return {
-      form: {
-        name: '',
-        email: '',
-        password: ''
-      },
-      show: true
-    }
-  },
+    data () {
+      return {
+        form: {
+          email: '',
+          password: ''
+        },
+        show: true
+      }
+    },
   methods: {
 
     onSubmit (evt) {
-        evt.preventDefault()
-        if (this.form) {
-            usersRef.push({
-                name: this.form.name,
-                email: this.form.email,
-                password: this.form.password
-            })
-        }
-    //     firebase.auth().createUserWithEmailAndPassword(email, password).catch(function(error) {
-    // // Handle Errors here.
-    // var errorCode = error.code;
-    // var errorMessage = error.message;
-    // // ...
-  // });
-        window.location = '../dashboard';
-        this.form.name = '';
-        this.form.email = '';
-        this.form.password = '';
+        evt.preventDefault();
+        var mail = this.form.email
+        var pass = this.form.password
+        firebase.auth().createUserWithEmailAndPassword(mail, pass)
+        .catch(function(error) {
+          var errorCode = error.code
+          var errorMessage = error.message
+          console.log("Error Msg"  + errorMessage)
+          })
+
+          firebase.auth().onAuthStateChanged(user => {
+              if(user) {
+                //Vue.localStorage.set('user-id', user.uid)
+                window.location = '../dashboard';
+              }
+          })
     },
     onReset (evt) {
       evt.preventDefault();
@@ -119,10 +120,10 @@ export default {
 }
 .register{
     margin-top: 50px;
-    background-color: rgba(234,215,215,0.7)
+    background-color: rgba(215, 225, 234,0.7)
 }
 h1{
-    color: rgb(199,129,119);
+    color: rgb(119, 149, 199);
     padding-left: 80px;
     padding-top: 20px;
     font-family: "Palatino Linotype", cursive, sans-serif;
@@ -141,7 +142,7 @@ h2{
 #reset{
     background-color: rgba(255,255,255,0.5);
     color: rgba(198, 6, 6, 0.8);
-    border-color: rgba(234,215,215,0);
+    border-color: rgba(215, 225, 234,0);
 }
 .reset-button{
     padding-left: 120px;
@@ -150,7 +151,7 @@ h2{
 #register{
     background-color: rgba(255,255,255,0.5);
     color: rgba(6, 92, 198, 0.8);
-    border-color: rgba(234,215,215,0);
+    border-color: rgba(215, 225, 234,0);
 }
 .form{
     padding-bottom: 50px;

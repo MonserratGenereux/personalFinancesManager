@@ -36,6 +36,7 @@
                         label-for="exampleInput4">
             <b-form-input id="exampleInput4"
                            type="text"
+                           v-model="form.bankNumber"
                            required
                            placeholder="Enter Card Number">
             </b-form-input>
@@ -152,7 +153,7 @@ export default {
 
 <style lang="css">
 h1{
-    color: rgb(199,129,119);
+    color: rgb(119, 149, 199);
     padding-left: 140px;
     padding-top: 20px;
     font-family: "Palatino Linotype", cursive, sans-serif;
@@ -164,7 +165,7 @@ h1{
 }
 .add-form{
     margin-top: 50px;
-    background-color: rgba(234,215,215,0.7);
+    background-color: rgba(215, 225, 234,0.7);
 }
 .add{
     height: 800px;
@@ -176,7 +177,7 @@ h1{
 #reset{
     background-color: rgba(255,255,255,0.5);
     color: rgba(198, 6, 6, 0.8);
-    border-color: rgba(234,215,215,0);
+    border-color: rgba(215, 225, 234,0);
 }
 .reset-button{
     padding-left: 120px;
@@ -185,6 +186,6 @@ h1{
 #submit{
     background-color: rgba(255,255,255,0.5);
     color: rgba(6, 92, 198, 0.8);
-    border-color: rgba(234,215,215,0);
+    border-color: rgba(215, 225, 234,0);
 }
 </style>
