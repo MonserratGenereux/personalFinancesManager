@@ -79,17 +79,15 @@ export default {
 
           firebase.auth().onAuthStateChanged(user => {
               if(user) {
-                // Vue.localStorage.set('user-id', user.uid)
+                localStorage.setItem('user-id', user.uid)
                 window.location = '../dashboard';
               }
           })
     },
     onReset (evt) {
       evt.preventDefault();
-      /* Reset our form values */
       this.form.email = '';
       this.form.password = '';
-      /* Trick to reset/clear native browser form validation state */
       this.show = false;
       this.$nextTick(() => { this.show = true });
     }

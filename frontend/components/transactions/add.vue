@@ -4,16 +4,16 @@
           <h1>Add Transaction</h1>
           <b-form @submit="onSubmit" @reset="onReset" v-if="show" class="form">
               <b-form-group id="exampleInputGroup1"
-                            label="Payment"
+                            label="Payment method"
                             label-for="exampleInput1">
                 <b-form-select id="exampleInput1"
                               :options="methods"
                               required
-                              v-model="payment.method">
+                              v-model="transaction.method">
                 </b-form-select>
               </b-form-group>
-              <b-form-group label="Radios using sub-components">
-                  <b-form-radio-group id="radios2" v-model="selected" name="radioSubComponent">
+              <b-form-group label="Select an action">
+                  <b-form-radio-group id="radios2" v-model="transaction.action" name="radioSubComponent">
                     <b-form-radio value="deposit">Deposit</b-form-radio>
                     <b-form-radio value="withdraw">Withdraw</b-form-radio>
                   </b-form-radio-group>
@@ -23,7 +23,7 @@
                         label-for="exampleInput2">
             <b-form-input id="exampleInput2"
                            type="number"
-                           v-model="payment.amount"
+                           v-model="transaction.amount"
                            required
                            placeholder="Enter the amount">
             </b-form-input>
@@ -56,39 +56,40 @@ var config = {
 }
 var firebaseApp = !firebase.apps.length ? firebase.initializeApp(config) : firebase.app()
 var db = firebaseApp.database()
+var transactionsRef = db.ref('transaction')
 var paymentsRef = db.ref('payments')
 
 export default {
   data () {
     return {
-        selected: 'deposit',
       options: [
         { text: 'deposit', value: 'deposit' },
         { text: 'withdraw', value: 'withdraw' }
     ],
-      payment: {
+      transaction: {
         amount: '',
-        method: null
+        method: []
       },
-      methods: [
-        { text: 'Select One', value: null },
-        'Credit Card', 'Debit Card', 'Cash'
-        //aqui van todas las tarjetas con el id del cliente
-      ],
+      methods: ['opciones'],
       show: true
     }
+  },
+  created (){
+      paymentsRef.orderByChild("userId").equalTo('JsgwgFjLzZWefnO6Aak2Wybe7Wz1').on("child_added",function(snapshot) {
+          //methods.push(snapshot.key);
+          console.log('aqui eno', snapshot.key);
+     });
+
   },
   methods: {
     onSubmit (evt) {
         evt.preventDefault()
         if (this.form) {
-            paymentsRef.push({
-                method: this.form.method,
-                bank: this.form.bank,
-                alias: this.form.alias,
-                amount: this.form.amount,
-                dueDate: this.form.dueDate,
-                bankNumber: this.form.bankNumber
+            transactionsRef.push({
+                method: this.methods.method,
+                amount: this.transaction.amount,
+                action: this.option.value,
+                userId: localStorage.getItem('user-id')
             })
         }
         this.form.method = null;

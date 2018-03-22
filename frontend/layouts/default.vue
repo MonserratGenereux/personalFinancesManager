@@ -35,6 +35,18 @@ var firebaseApp = !firebase.apps.length ? firebase.initializeApp(config) : fireb
 
 
 export default {
+    // beforeMount: function() {
+    //     this.activeUser = false;
+    //     firebase.auth().onAuthStateChanged(user => {
+    //         if(user) {
+    //             console.log('entre aqui', user);
+    //             this.activeUser = true;
+    //             console.log('this.activeUser', this.activeUser);
+    //         }
+    //     })
+    //     console.log('this.activeUser', this.activeUser);
+    // },
+
   methods: {
     logOut (evt) {
         evt.preventDefault();
@@ -47,7 +59,7 @@ export default {
 
           firebase.auth().onAuthStateChanged(user => {
               if(!user) {
-                // Vue.localStorage.set('user-id', user.uid)
+                localStorage.removeItem('user-id')
                 window.location = '../users/login';
               }
           })
@@ -57,7 +69,8 @@ export default {
 </script>
 <style>
 .default{
-    background: url("/assets/bg.png");
+    /* background: url("/assets/bg.png"); */
+    background-color: white;
     width: 100%;
     height: 800px;
 }

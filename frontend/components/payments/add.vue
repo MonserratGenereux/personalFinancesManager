@@ -123,7 +123,8 @@ export default {
                 alias: this.form.alias,
                 amount: this.form.amount,
                 dueDate: this.form.dueDate,
-                bankNumber: this.form.bankNumber
+                bankNumber: this.form.bankNumber,
+                userId: localStorage.getItem('user-id')
             })
         }
         this.form.method = null;
@@ -136,14 +137,12 @@ export default {
     },
     onReset (evt) {
       evt.preventDefault();
-      /* Reset our form values */
       this.form.method = null;
       this.form.bank = null;
       this.form.alias = '';
       this.form.amount = '';
       this.form.dueDate = '';
       this.form.bankNumber = '';
-      /* Trick to reset/clear native browser form validation state */
       this.show = false;
       this.$nextTick(() => { this.show = true });
     }

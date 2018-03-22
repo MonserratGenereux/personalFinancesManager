@@ -3,13 +3,8 @@
       <div class="col-md-6 offset-3 register" >
           <h1>Welcome to Finantly</h1>
           <h2>Register</h2>
-          <!-- <form class="" action="" method="post">
-              First name: <input type="text" name="fname" v-model="form.email"><br>
-             Last name: <input type="text" name="lname" v-model="form.password"><br>
-             <button type="submit" value="Submit" @click="onSubmit()">enter</button>
-          </form> -->
           <b-form @submit="onSubmit" @reset="onReset" v-if="show" class="form">
-          <b-form-group id="exampleInputGroup1"
+          <!-- <b-form-group id="exampleInputGroup1"
                         label="Name:"
                         label-for="exampleInput1">
             <b-form-input id="exampleInput1"
@@ -18,7 +13,7 @@
                           required
                           placeholder="Your name">
             </b-form-input>
-          </b-form-group>
+          </b-form-group> -->
           <b-form-group id="exampleInputGroup2"
                         label="Email:"
                         label-for="exampleInput2">
@@ -57,7 +52,7 @@
 <script>
 import Vue from 'vue'
 import firebase from 'firebase'
-// Initialize Firebase
+
 var config = {
     apiKey: "AIzaSyDGDCny8Rw_rEhM7NlwazhVfjgfPyTC77U",
     authDomain: "personal-finances-manager.firebaseapp.com",
@@ -67,8 +62,6 @@ var config = {
     messagingSenderId: "969076333881"
 }
 var firebaseApp = !firebase.apps.length ? firebase.initializeApp(config) : firebase.app()
-var db = firebaseApp.database()
-var usersRef = db.ref('users')
 
 export default {
     data () {
@@ -95,18 +88,16 @@ export default {
 
           firebase.auth().onAuthStateChanged(user => {
               if(user) {
-                //Vue.localStorage.set('user-id', user.uid)
+                localStorage.setItem('user-id', user.uid)
                 window.location = '../dashboard';
               }
           })
     },
     onReset (evt) {
       evt.preventDefault();
-      /* Reset our form values */
       this.form.name = '';
       this.form.email = '';
       this.form.password = '';
-      /* Trick to reset/clear native browser form validation state */
       this.show = false;
       this.$nextTick(() => { this.show = true });
     }
