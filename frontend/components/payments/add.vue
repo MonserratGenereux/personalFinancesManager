@@ -45,7 +45,7 @@
                         label="Inicial Amount:"
                         label-for="exampleInput5">
             <b-form-input id="exampleInput5"
-                           type="text"
+                           type="number"
                            v-model="form.amount"
                            required
                            placeholder="Enter the inicial amount">
@@ -96,7 +96,7 @@ export default {
     return {
       form: {
         alias: '',
-        amount: '',
+        amount:'' ,
         bankNumber: '',
         method: null,
         bank: null,

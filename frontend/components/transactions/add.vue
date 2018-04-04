@@ -2,20 +2,18 @@
   <div class="add">
       <div class="col-md-6 offset-3 add-form">
           <h1>Add Transaction</h1>
-          <b-form @submit="onSubmit" @reset="onReset" v-if="show" class="form">
+          <b-form @submit="onCalculate" @reset="onReset" v-if="show" class="form">
               <b-form-group id="exampleInputGroup1"
                             label="Payment method"
                             label-for="exampleInput1">
                 <b-form-select id="exampleInput1"
-                              :options="methods"
+                              :options="metodos"
                               required
-                              v-model="transaction.method">
+                              v-model="form.method">
                 </b-form-select>
               </b-form-group>
               <b-form-group label="Select an action">
-                  <b-form-radio-group id="radios2" v-model="transaction.action" name="radioSubComponent">
-                    <b-form-radio value="deposit">Deposit</b-form-radio>
-                    <b-form-radio value="withdraw">Withdraw</b-form-radio>
+                  <b-form-radio-group id="radios2" v-model="form.action" :options="options" name="radioSubComponent">
                   </b-form-radio-group>
             </b-form-group>
           <b-form-group id="exampleInputGroup2"
@@ -23,7 +21,7 @@
                         label-for="exampleInput2">
             <b-form-input id="exampleInput2"
                            type="number"
-                           v-model="transaction.amount"
+                           v-model="form.amount"
                            required
                            placeholder="Enter the amount">
             </b-form-input>
@@ -39,6 +37,10 @@
               </div>
           </div>
         </b-form>
+      </div>
+      <div class="login-button">
+          <b-button v-on:click="back" id="back" class="btn btn-default" type="submit">Go Back</b-button>
+
       </div>
   </div>
 </template>
@@ -61,54 +63,90 @@ var paymentsRef = db.ref('payments')
 
 export default {
   data () {
+      this.metodos = []
     return {
+        metodos: [],
+        form: {
+          method: '',
+          action: '',
+          amount: '',
+          userId: ''
+        },
       options: [
         { text: 'deposit', value: 'deposit' },
         { text: 'withdraw', value: 'withdraw' }
-    ],
-      transaction: {
-        amount: '',
-        method: []
-      },
-      methods: ['opciones'],
+      ],
       show: true
     }
   },
-  created (){
-      paymentsRef.orderByChild("userId").equalTo('JsgwgFjLzZWefnO6Aak2Wybe7Wz1').on("child_added",function(snapshot) {
-          //methods.push(snapshot.key);
-          console.log('aqui eno', snapshot.key);
-     });
+  mounted () {
+      console.log('entro al created');
+      var metodos2 = []
 
-  },
+      paymentsRef.orderByChild("userId").equalTo('JsgwgFjLzZWefnO6Aak2Wybe7Wz1').on("child_added",function(snapshot) {
+          metodos2.push(snapshot.child("alias").val());
+      })
+
+
+      // for (var i = 0; i < metodos2.length; i++) {
+      //     console.log('entro al for');
+      //     this.metodos.push(metodos2[i]);
+      // }
+
+      this.metodos = metodos2;
+      console.log('thismethods', this.metodos);
+   },
   methods: {
-    onSubmit (evt) {
+      back (evt){
+          evt.preventDefault()
+          window.location = '../dashboard';
+      },
+    onCalculate (evt){
         evt.preventDefault()
+        console.log('ENTREEEEEEEEEEE');
+        var pay, key
+        paymentsRef.orderByChild("alias").equalTo(this.form.method).on("child_added",function(snapshot) {
+            console.log('entre al snapshot');
+            pay = snapshot.child("amount").val();
+            key = snapshot.key
+            console.log('pay', pay);
+        })
+        if(this.form.action == 'withdraw'){
+            pay -= this.form.amount;
+        }else {
+            pay = +pay + +this.form.amount;
+        }
+        console.log('pay', pay);
+
+        var updates = {};
+        updates['/payments/' + key + '/amount'] = pay;
+
+        console.log('nuevo pay', pay);
         if (this.form) {
             transactionsRef.push({
-                method: this.methods.method,
-                amount: this.transaction.amount,
-                action: this.option.value,
+                method: this.form.method,
+                amount: this.form.amount,
+                action: this.form.action,
                 userId: localStorage.getItem('user-id')
             })
         }
-        this.form.method = null;
-        this.form.bank = null;
-        this.form.alias = '';
+        this.form.method = '';
         this.form.amount = '';
-        this.form.dueDate = '';
-        this.form.bankNumber = '';
-        window.location = '../dashboard';
+        this.form.action = '';
+
+        // window.location = '../dashboard';
+        return db.ref().update(updates);
+    },
+    onSubmit (evt) {
+        evt.preventDefault()
+
     },
     onReset (evt) {
       evt.preventDefault();
       /* Reset our form values */
-      this.form.method = null;
-      this.form.bank = null;
-      this.form.alias = '';
+      this.form.method = '';
       this.form.amount = '';
-      this.form.dueDate = '';
-      this.form.bankNumber = '';
+      this.form.action = '';
       /* Trick to reset/clear native browser form validation state */
       this.show = false;
       this.$nextTick(() => { this.show = true });
@@ -153,5 +191,11 @@ h1{
     background-color: rgba(255,255,255,0.5);
     color: rgba(6, 92, 198, 0.8);
     border-color: rgba(215, 225, 234,0);
+}
+#back{
+    margin-left: 550px;
+    background-color: rgba(255,255,255,0.5);
+    color: rgba(6, 92, 198, 0.8);
+    border-color: rgba(6, 92, 198, 0.8);
 }
 </style>

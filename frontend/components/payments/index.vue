@@ -72,22 +72,24 @@ var db = firebaseApp.database()
 var paymentsRef = db.ref('payments')
 var userMail = firebase.auth().currentUser
 
+
 export default {
     data () {
       return {
           userMail
       }
     },
-    // created: function() {
-    //     firebase.auth().onAuthStateChanged(user => {
-    //         if(user) {
-    //             //userMail = user.email
-    //             //console.log('userMail', user.email);
-    //         }
-    //     })
-    // },
+    created: function() {
+        firebase.auth().onAuthStateChanged(user => {
+            if(user) {
+                userMail = user.email
+                console.log('userMail', user.email);
+            }
+        })
+    },
     firebase: {
         payments: paymentsRef.orderByChild("userId").equalTo('JsgwgFjLzZWefnO6Aak2Wybe7Wz1')
+
     }
 }
 </script>
