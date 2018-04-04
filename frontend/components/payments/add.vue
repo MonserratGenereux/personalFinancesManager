@@ -96,7 +96,7 @@ export default {
     return {
       form: {
         alias: '',
-        amount:'' ,
+        amount:'',
         bankNumber: '',
         method: null,
         bank: null,

@@ -60,6 +60,7 @@ var firebaseApp = !firebase.apps.length ? firebase.initializeApp(config) : fireb
 var db = firebaseApp.database()
 var transactionsRef = db.ref('transaction')
 var paymentsRef = db.ref('payments')
+var pay, key
 
 export default {
   data () {
@@ -80,21 +81,31 @@ export default {
     }
   },
   mounted () {
-      console.log('entro al created');
+      // console.log('entro al mounted');
       var metodos2 = []
 
       paymentsRef.orderByChild("userId").equalTo('JsgwgFjLzZWefnO6Aak2Wybe7Wz1').on("child_added",function(snapshot) {
           metodos2.push(snapshot.child("alias").val());
       })
-
-
       // for (var i = 0; i < metodos2.length; i++) {
       //     console.log('entro al for');
       //     this.metodos.push(metodos2[i]);
       // }
-
       this.metodos = metodos2;
-      console.log('thismethods', this.metodos);
+      // console.log('thismethods', this.metodos);
+      console.log('entro al created');
+      paymentsRef.orderByChild("alias").equalTo('Nomina').on("child_added",function(snapshot) {
+          console.log('entre al snapshot');
+          pay = snapshot.child("amount").val();
+          key = snapshot.key
+          console.log('pay', pay);
+      })
+      console.log(' sali del snap');
+      return pay, key
+
+   },
+   created (){
+
    },
   methods: {
       back (evt){
@@ -104,13 +115,8 @@ export default {
     onCalculate (evt){
         evt.preventDefault()
         console.log('ENTREEEEEEEEEEE');
-        var pay, key
-        paymentsRef.orderByChild("alias").equalTo(this.form.method).on("child_added",function(snapshot) {
-            console.log('entre al snapshot');
-            pay = snapshot.child("amount").val();
-            key = snapshot.key
-            console.log('pay', pay);
-        })
+
+        console.log('pay1', this.pay);
         if(this.form.action == 'withdraw'){
             pay -= this.form.amount;
         }else {
@@ -121,6 +127,9 @@ export default {
         var updates = {};
         updates['/payments/' + key + '/amount'] = pay;
 
+        // if (updates ) {
+        //     alert('hiciste un update de ' + pay)
+        // }
         console.log('nuevo pay', pay);
         if (this.form) {
             transactionsRef.push({
@@ -136,10 +145,6 @@ export default {
 
         // window.location = '../dashboard';
         return db.ref().update(updates);
-    },
-    onSubmit (evt) {
-        evt.preventDefault()
-
     },
     onReset (evt) {
       evt.preventDefault();
