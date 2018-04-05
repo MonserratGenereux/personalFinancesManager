@@ -67,23 +67,27 @@ export default {
   methods: {
 
     onSubmit (evt) {
-        evt.preventDefault()
-        if (this.form) {
-            usersRef.push({
-                email: this.form.email,
-                password: this.form.password
-            })
-        }
-        window.location = '../dashboard';
-        this.form.email = '';
-        this.form.password = '';
+        evt.preventDefault();
+        var mail = this.form.email
+        var pass = this.form.password
+        firebase.auth().signInWithEmailAndPassword(mail,pass)
+        .catch(function(error) {
+          var errorCode = error.code
+          var errorMessage = error.message
+          console.log("Error Msg"  + errorMessage)
+          })
+
+          firebase.auth().onAuthStateChanged(user => {
+              if(user) {
+                localStorage.setItem('user-id', user.uid)
+                window.location = '../dashboard';
+              }
+          })
     },
     onReset (evt) {
       evt.preventDefault();
-      /* Reset our form values */
       this.form.email = '';
       this.form.password = '';
-      /* Trick to reset/clear native browser form validation state */
       this.show = false;
       this.$nextTick(() => { this.show = true });
     }
@@ -97,10 +101,10 @@ export default {
 }
 .login-form{
     margin-top: 50px;
-    background-color: rgba(234,215,215,0.7)
+    background-color: rgba(215, 225, 234,0.7)
 }
 h1{
-    color: rgb(199,129,119);
+    color: rgb(119, 149, 199);
     padding-left: 80px;
     padding-top: 20px;
     font-family: "Palatino Linotype", cursive, sans-serif;
@@ -119,7 +123,7 @@ h2{
 #reset{
     background-color: rgba(255,255,255,0.5);
     color: rgba(198, 6, 6, 0.8);
-    border-color: rgba(234,215,215,0);
+    border-color: rgba(215, 225, 234,0);
 }
 .reset-button{
     padding-left: 120px;
@@ -128,7 +132,7 @@ h2{
 #login{
     background-color: rgba(255,255,255,0.5);
     color: rgba(6, 92, 198, 0.8);
-    border-color: rgba(234,215,215,0);
+    border-color: rgba(215, 225, 234,0);
 }
 .form{
     padding-bottom: 50px;

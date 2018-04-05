@@ -9,6 +9,7 @@
                     <b-nav-item href="/dashboard">Home</b-nav-item>
                     <b-nav-item href="/users/register">Registro</b-nav-item>
                     <b-nav-item href="/users/login">Login</b-nav-item>
+                    <b-nav-item v-on:click="logOut">Logout</b-nav-item>
                 </b-navbar-nav>
             </b-collapse>
         </b-navbar>
@@ -18,14 +19,63 @@
     </div>
     </div>
 </template>
+<script>
+import firebase from 'firebase'
+// Initialize Firebase
+var config = {
+    apiKey: "AIzaSyDGDCny8Rw_rEhM7NlwazhVfjgfPyTC77U",
+    authDomain: "personal-finances-manager.firebaseapp.com",
+    databaseURL: "https://personal-finances-manager.firebaseio.com",
+    projectId: "personal-finances-manager",
+    storageBucket: "personal-finances-manager.appspot.com",
+    messagingSenderId: "969076333881"
+}
+var firebaseApp = !firebase.apps.length ? firebase.initializeApp(config) : firebase.app()
+
+
+
+export default {
+    // beforeMount: function() {
+    //     this.activeUser = false;
+    //     firebase.auth().onAuthStateChanged(user => {
+    //         if(user) {
+    //             console.log('entre aqui', user);
+    //             this.activeUser = true;
+    //             console.log('this.activeUser', this.activeUser);
+    //         }
+    //     })
+    //     console.log('this.activeUser', this.activeUser);
+    // },
+
+  methods: {
+    logOut (evt) {
+        evt.preventDefault();
+        firebase.auth().signOut()
+        .catch(function(error) {
+          var errorCode = error.code
+          var errorMessage = error.message
+          console.log("Error Msg"  + errorMessage)
+          })
+
+          firebase.auth().onAuthStateChanged(user => {
+              if(!user) {
+                localStorage.removeItem('user-id')
+                window.location = '../users/login';
+              }
+          })
+    }
+  }
+}
+</script>
 <style>
 .default{
-    background: url("/assets/bg2.jpg");
+    /* background: url("/assets/bg.png"); */
+    background-color: white;
     width: 100%;
-    height: auto;
+    height: 800px;
 }
 .navbar{
-    background-color: rgba(234,215,215, 0.5);
+    background-color: rgba(215, 225, 234, 0.5);
 }
 .bg-light{
     background-color: rgba(255,255,255, 0) !important;

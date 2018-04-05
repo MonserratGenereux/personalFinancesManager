@@ -14,7 +14,8 @@ module.exports = {
     ]
   },
   plugins: [
-      {src: '~/plugins/firebase', ssr: false}
+      {src: '~/plugins/firebase', ssr: false},
+      {src: '~/plugins/localStorage.js', ssr: false}
   ],
   modules: [
    'bootstrap-vue/nuxt'
@@ -22,7 +23,7 @@ module.exports = {
   /*
   ** Customize the progress bar color
   */
-  loading: { color: '#3B8070' },
+  loading: { color: '#ee6e73' },
   /*
   ** Build configuration
   */
