@@ -52,7 +52,6 @@
             </b-tab>
           </b-tabs>
       </b-card>
-
   </div>
 </template>
 
