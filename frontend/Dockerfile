@@ -12,7 +12,4 @@ RUN rm -rf ./build
 RUN rm -rf ./test
 RUN rm -rf ./src
 
-ENV HOST 0.0.0.0
-EXPOSE 8888
-
-CMD ["npm", "start"]
+CMD ["npm", "run", "dev"]
