@@ -16,6 +16,7 @@
                                 <img src="../../assets/cash.png" alt="">
                                 <h5>{{payment.alias}}</h5>
                                 Available: ${{payment.amount}}
+                                <a href="#" v-on:click="removePayment(payment.alias)" data-toggle="tooltip" data-html="true" title="Delete"><img style="width: 30px; margin-left: 850px;" src="../../assets/delete.png" /></a>
                             </b-card>
                         </b-card-group>
                     </div>
@@ -33,6 +34,7 @@
                             <h4>{{payment.bankNumber}}</h4>
                             Available: ${{payment.amount}}
                             <h4>dueDate: {{payment.dueDate}}</h4>
+                            <a href="#" v-on:click="removePayment(payment.alias)" data-toggle="tooltip" data-html="true" title="Delete"><img style="width: 30px; margin-left: 850px;" src="../../assets/delete.png" /></a>
                         </b-card>
                     </b-card-group>
                 </div>
@@ -49,6 +51,7 @@
                         <h5>{{payment.alias}}</h5>
                         <h4>{{payment.bankNumber}}</h4>
                         Available: ${{payment.amount}}
+                        <a href="#" v-on:click="removePayment(payment.alias)" data-toggle="tooltip" data-html="true" title="Delete"><img style="width: 30px; margin-left: 850px;" src="../../assets/delete.png" /></a>
                     </b-card>
                 </b-card-group>
             </div>
@@ -60,7 +63,6 @@
         <hr/>
         <div class="options">
             <b-nav vertical>
-                <b-nav-item >Resumen</b-nav-item>
                 <b-nav-item v-on:click="addPayment()" >Add Payment</b-nav-item>
                 <b-nav-item v-on:click="addTransaction()" >Add Transaction</b-nav-item>
                 <b-nav-item v-if="transactions.length > 0">
@@ -74,13 +76,13 @@
             </b-nav-item>
             </b-nav>
         </div>
-        <hr/>
-        <div class="row">
+        <div class="statistics">
+            <hr/>
             <h3 v-if="payments">You have {{payments.length}} payment methods</h3>
+            <hr/>
             <h3 v-if="transactions">You have done {{transactions.length}} transactions</h3>
+            <hr/>
         </div>
-
-        <hr/>
     </div>
     </div>
 
@@ -108,7 +110,8 @@ var moment = require('moment')
 export default {
     data () {
         this.file_name = moment().format('MM_D_YYYY'),
-        this.today = moment().format('D')
+        this.today = moment().format('D'),
+        this.keytem = '.key'
         return {
             transactions: 0,
             reminder_flag: [],
@@ -147,7 +150,15 @@ export default {
             }
           }
           this.reminder_flag = reminderObject
-        }
+      },
+      removePayment (paymentAlias) {
+          paymentsRef.orderByChild("alias").equalTo(paymentAlias).on("child_added",function(snapshot) {
+              if(confirm('Are you sure?')){
+                paymentsRef.child(snapshot.key).remove();
+              }
+
+          })
+      }
   },
     mounted: function() {
         if (this.payments != "") {
@@ -191,6 +202,12 @@ img{
 }
 h4{
     font-size: 10px;
+}
+h3{
+    font-size: 20px;
+}
+.statistics{
+    width: 200%;
 }
 .options{
     padding-top: 10px;

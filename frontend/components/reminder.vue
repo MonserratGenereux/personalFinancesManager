@@ -33,7 +33,6 @@ export default {
   },
   props: ['info'],
   mounted () {
-    console.log('ya ando en el reminder')
     let title = ('You need pay Credit Card ' + this.info.alias)
     let text = ('Bank: ' + this.info.bank + '<br/>'+' Bank number: ' + this.info.bankNumber)
     let group = 'custom-template'
@@ -50,7 +49,7 @@ export default {
 
 <style>
 .notifications{
-  padding-top: 100px !important;
+  margin-top: 100px !important;
 }
 body {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
