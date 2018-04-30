@@ -7,27 +7,6 @@
                     <allPayments/>
                 </div>
             </div>
-            <!-- <div class="col-md-4">
-                <hr/>
-                <div class="options">
-                    <b-nav vertical>
-                        <b-nav-item >Resumen</b-nav-item>
-                        <b-nav-item v-on:click="addPayment()" >Add Payment</b-nav-item>
-                        <b-nav-item v-on:click="addTransaction()">Add Transaction</b-nav-item>
-                        <b-nav-item >
-                            <download-excel
-                            :data   = "json_data"
-                            :fields = "json_fields"
-                            type    = "csv"
-                            name    = "filename.csv">
-                            Export CSV
-                        </download-excel>
-                    </b-nav-item>
-                    </b-nav>
-                </div>
-                <hr/>
-                More info here
-            </div> -->
         </div>
     </div>
 </template>
@@ -69,7 +48,7 @@ export default {
 <style lang="css">
 .info{
     padding-top: 10px;
-    background-color: rgba(215, 225, 234,0.7);
+    /* background-color: rgba(215, 225, 234,0.7); */
     padding-left: 50px;
     width: 1200px;
 }

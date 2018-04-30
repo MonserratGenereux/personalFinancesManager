@@ -1,10 +1,14 @@
 <template>
   <div class="reminder">
+      <!-- <button @click="show('custom-template')">
+        show top left
+      </button> -->
     <notifications
-      :duration="10000"
-      :width="500"
-      animation-name="v-fade-left"
-      position="top left">
+    group="custom-template"
+                   :duration="10000"
+                   :width="500"
+                   animation-name="v-fade-left"
+                   position="top left">
     </notifications>
   </div>
 </template>
@@ -29,11 +33,10 @@ export default {
   },
   props: ['info'],
   mounted () {
-    console.log(this.info)
-    let title = ('This is a Reminder for task ' + this.info.title)
-    let text = 'Due for ' + new Date(Number(this.info.due_timestamp))
+    console.log('ya ando en el reminder')
+    let title = ('You need pay Credit Card ' + this.info.alias)
+    let text = ('Bank: ' + this.info.bank + '<br/>'+' Bank number: ' + this.info.bankNumber)
     let group = 'custom-template'
-    console.log('algo', text)
     this.$notify({ group, title, text })
     this.$parent.$emit('reminder')
   },
@@ -45,9 +48,9 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style>
 .notifications{
-  padding-top: 65px !important;
+  padding-top: 100px !important;
 }
 body {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;

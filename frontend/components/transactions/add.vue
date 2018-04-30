@@ -3,11 +3,11 @@
         <div class="col-md-6 offset-3 add-form">
             <h1>Add Transaction</h1>
             <select v-model="form.method" v-on:change="onChange(form.method)">
+                 <option disabled value="">Please select one</option>
                 <option v-for="option in metodos" v-bind:key="option">
-  {{ option}}
-</option>
-
-</select>
+                  {{ option}}
+                </option>
+            </select>
             <b-form @submit="onCalculate" @reset="onReset" v-if="show" class="form">
                 <!-- <b-form-group id="exampleInputGroup1"
                 label="Payment method"
@@ -190,5 +190,10 @@ h1{
     background-color: rgba(255,255,255,0.5);
     color: rgba(6, 92, 198, 0.8);
     border-color: rgba(6, 92, 198, 0.8);
+}
+select{
+    width: 100%;
+    height: 30px;
+    margin-bottom: 10px;
 }
 </style>

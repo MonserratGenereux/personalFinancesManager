@@ -51,7 +51,7 @@
                            placeholder="Enter the inicial amount">
             </b-form-input>
           </b-form-group>
-          <b-form-group id="exampleInputGroup6" v-if="form.method == 'Credit Card'"
+          <!-- <b-form-group id="exampleInputGroup6" v-if="form.method == 'Credit Card'"
                         label="Due Date:"
                         label-for="exampleInput6">
             <b-form-input id="exampleInput6"
@@ -60,6 +60,15 @@
                            required
                            placeholder="Enter Card due date">
             </b-form-input>
+          </b-form-group> -->
+          <b-form-group id="exampleInputGroup6" v-if="form.method == 'Credit Card'"
+                        label="Due Date:"
+                        label-for="exampleInput6">
+            <b-form-select id="exampleInput6"
+                          :options="days"
+                          required
+                          v-model="form.dueDate">
+            </b-form-select>
           </b-form-group>
           <div class="buttons">
               <div class="login-button">
@@ -100,11 +109,16 @@ export default {
         bankNumber: '',
         method: null,
         bank: null,
-        dueDate: ''
+        dueDate: null
       },
       methods: [
         { text: 'Select One', value: null },
         'Credit Card', 'Debit Card', 'Cash'
+      ],
+      days: [
+        { text: 'Select One', value: null },
+        '1', '2', '3','4', '5', '6','7', '8', '9','10', '11', '12','13', '14', '15',
+        '16', '17', '18','19', '20', '21','22', '23', '24','25', '26', '27', '28', '29', '30'
       ],
       banks: [
         { text: 'Select One', value: null },

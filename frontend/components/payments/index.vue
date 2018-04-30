@@ -1,8 +1,10 @@
 <template lang="html">
     <div class="row">
-        <div class="col-md-6 dashboard">
+        <reminder v-for="payment in reminder_flag" v-bind:info="payment " :key="payment.key"/>
+
+        <div v-if="payments" class="col-md-10 dashboard">
             <h3>Hello!</h3>
-            <h5>{{userMail}}</h5>
+            <h5 style="font-size:20px;">{{userMail}}</h5>
             <b-card no-body>
                 <b-tabs card tabs>
                     <b-tab title="Cash" active>
@@ -54,7 +56,7 @@
     </b-tabs>
     </b-card>
     </div>
-    <div class="col-md-4">
+    <div v-if="payments" class="col-md-2">
         <hr/>
         <div class="options">
             <b-nav vertical>
@@ -66,14 +68,19 @@
                     :data   = "transactions"
                     :fields = "json_fields"
                     type    = "csv"
-                    name    = "filename.csv">
+                    :name    = "fileName">
                     Export CSV
                 </download-excel>
             </b-nav-item>
             </b-nav>
         </div>
         <hr/>
-        More info here
+        <div class="row">
+            <h3 v-if="payments">You have {{payments.length}} payment methods</h3>
+            <h3 v-if="transactions">You have done {{transactions.length}} transactions</h3>
+        </div>
+
+        <hr/>
     </div>
     </div>
 
@@ -81,6 +88,7 @@
 
 <script>
 import firebase from 'firebase'
+import reminder from '~/components/reminder'
 // Initialize Firebase
 var config = {
     apiKey: "AIzaSyDGDCny8Rw_rEhM7NlwazhVfjgfPyTC77U",
@@ -95,18 +103,22 @@ var db = firebaseApp.database()
 var paymentsRef = db.ref('payments')
 var transactionsRef = db.ref('transaction')
 var userMail = firebase.auth().currentUser
-
+var moment = require('moment')
 
 export default {
     data () {
+        this.file_name = moment().format('MM_D_YYYY'),
+        this.today = moment().format('D')
         return {
             transactions: 0,
+            reminder_flag: [],
             userMail: 'loading',
             json_fields: {
                 'Action': 'action',
                 'Amount': 'amount',
                 'Method': 'method',
             },
+            fileName: this.file_name + ".csv",
             json_meta: [
                 [
                     {
@@ -117,30 +129,51 @@ export default {
             ],
         }
     },
+    components: {
+       reminder
+    },
     methods: {
       addPayment () {
           window.location = '../payments/add';
       },
       addTransaction () {
           window.location = '../transactions/add';
-      }
+      },
+      setNotifications: function (paymentsArray) {
+          let reminderObject = []
+          for (var index in paymentsArray) {
+            if (paymentsArray[index].dueDate != "" && paymentsArray[index].dueDate == this.today) {
+              reminderObject.push(paymentsArray[index])
+            }
+          }
+          this.reminder_flag = reminderObject
+        }
   },
-    created: function() {
+    mounted: function() {
+        if (this.payments != "") {
+            this.setNotifications(this.payments)
+        }
+        else {
+            setTimeout(this.setNotifications.bind(null, this.payments), 1000);
+        }
+
         firebase.auth().onAuthStateChanged(user => {
             if(user) {
                 this.userMail = user.email
-                console.log('userMail', user.email);
             }else{
                 this.userMail = 'no user'
             }
         })
     },
+    created: function() {
+
+    },
     firebase: function () {
         var userIdNice = localStorage.getItem('user-id')
-    return {
-      payments: paymentsRef.orderByChild("userId").equalTo(userIdNice),
-      transactions: transactionsRef.orderByChild("userId").equalTo(userIdNice)
-    }
+        return {
+          payments: paymentsRef.orderByChild("userId").equalTo(userIdNice),
+          transactions: transactionsRef.orderByChild("userId").equalTo(userIdNice)
+        }
     }
 }
 </script>
@@ -148,6 +181,7 @@ export default {
 <style lang="css">
 .dashboard{
     width: 650px;
+    background-color: rgba(215, 225, 234,0.7);
 }
 img{
     width: 70px;
