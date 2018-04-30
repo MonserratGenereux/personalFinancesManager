@@ -15,7 +15,9 @@ module.exports = {
   },
   plugins: [
       {src: '~/plugins/firebase', ssr: false},
-      {src: '~/plugins/localStorage.js', ssr: false}
+      {src: '~/plugins/localStorage.js', ssr: false},
+      {src: '~/plugins/notifications.js', ssr: false},
+      {src: '~/plugins/csv.js', ssr: false}
   ],
   modules: [
    'bootstrap-vue/nuxt'

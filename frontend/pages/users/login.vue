@@ -74,6 +74,8 @@ export default {
         .catch(function(error) {
           var errorCode = error.code
           var errorMessage = error.message
+          alert(errorMessage);
+
           console.log("Error Msg"  + errorMessage)
           })
 
