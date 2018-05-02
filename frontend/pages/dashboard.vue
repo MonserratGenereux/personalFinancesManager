@@ -1,53 +1,56 @@
 <template lang="html">
     <div class="all-container">
         <div class="row">
-            <div class="col-md-8 all-info">
+            <div class="col-md-12 all-info">
                 <hr/>
                 <div class="info">
                     <allPayments/>
                 </div>
-            </div>
-            <div class="col-md-4">
-                <hr/>
-                <div class="options">
-                    <b-nav vertical>
-                        <b-nav-item >Resumen</b-nav-item>
-                        <b-nav-item v-on:click="addPayment()" >Add Payment</b-nav-item>
-                        <b-nav-item v-on:click="addTransaction()">Add Transaction</b-nav-item>
-                        <b-nav-item >Export CSV</b-nav-item>
-                    </b-nav>
-                </div>
-                <hr/>
-                More info here
             </div>
         </div>
     </div>
 </template>
 
 <script>
+import firebase from 'firebase'
 import allPayments from '~/components/payments/index'
+
+// Initialize Firebase
+var config = {
+    apiKey: "AIzaSyDGDCny8Rw_rEhM7NlwazhVfjgfPyTC77U",
+    authDomain: "personal-finances-manager.firebaseapp.com",
+    databaseURL: "https://personal-finances-manager.firebaseio.com",
+    projectId: "personal-finances-manager",
+    storageBucket: "personal-finances-manager.appspot.com",
+    messagingSenderId: "969076333881"
+}
+var firebaseApp = !firebase.apps.length ? firebase.initializeApp(config) : firebase.app()
+var db = firebaseApp.database()
+var paymentsRef = db.ref('payments')
 export default {
     components: {
         allPayments,
     },
     methods: {
-
       addPayment () {
           window.location = '../payments/add';
       },
       addTransaction () {
           window.location = '../transactions/add';
       }
-    }
+  },
+  firebase: {
+      payments: paymentsRef.orderByChild("userId").equalTo('JsgwgFjLzZWefnO6Aak2Wybe7Wz1')
+  }
 }
 </script>
 
 <style lang="css">
 .info{
     padding-top: 10px;
-    background-color: rgba(215, 225, 234,0.7);
+    /* background-color: rgba(215, 225, 234,0.7); */
     padding-left: 50px;
-    width: 750px;
+    width: 1200px;
 }
 .options{
     padding-top: 10px;

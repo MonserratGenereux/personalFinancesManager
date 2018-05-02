@@ -1,6 +1,6 @@
 <template lang="html">
   <div class="">
-      Lo diseñas como queiras con fotos bien nice
+      Cosas bien shidas aqui
   </div>
 </template>
 

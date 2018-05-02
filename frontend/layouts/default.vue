@@ -6,10 +6,10 @@
             <b-navbar-brand>Finantly <h5>Personal Finances Manager</h5></b-navbar-brand>
             <b-collapse is-nav id="nav_text_collapse">
                 <b-navbar-nav>
-                    <b-nav-item href="/dashboard">Home</b-nav-item>
-                    <b-nav-item href="/users/register">Registro</b-nav-item>
-                    <b-nav-item href="/users/login">Login</b-nav-item>
-                    <b-nav-item v-on:click="logOut">Logout</b-nav-item>
+                    <b-nav-item v-show="activeUser" href="/dashboard">Home</b-nav-item>
+                    <b-nav-item v-show="!activeUser" href="/users/register">Register</b-nav-item>
+                    <b-nav-item v-show="!activeUser" href="/users/login">Login</b-nav-item>
+                    <b-nav-item v-show="activeUser" v-on:click="logOut">Logout</b-nav-item>
                 </b-navbar-nav>
             </b-collapse>
         </b-navbar>
@@ -35,18 +35,18 @@ var firebaseApp = !firebase.apps.length ? firebase.initializeApp(config) : fireb
 
 
 export default {
-    // beforeMount: function() {
-    //     this.activeUser = false;
-    //     firebase.auth().onAuthStateChanged(user => {
-    //         if(user) {
-    //             console.log('entre aqui', user);
-    //             this.activeUser = true;
-    //             console.log('this.activeUser', this.activeUser);
-    //         }
-    //     })
-    //     console.log('this.activeUser', this.activeUser);
-    // },
-
+    data () {
+      return {
+          activeUser: false
+      }
+  },
+    created: function() {
+        firebase.auth().onAuthStateChanged(user => {
+            if(user) {
+                this.activeUser = true;
+            }
+        })
+    },
   methods: {
     logOut (evt) {
         evt.preventDefault();
@@ -59,6 +59,7 @@ export default {
 
           firebase.auth().onAuthStateChanged(user => {
               if(!user) {
+                this.activeUser = false;
                 localStorage.removeItem('user-id')
                 window.location = '../users/login';
               }
