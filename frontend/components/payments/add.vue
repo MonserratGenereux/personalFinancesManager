@@ -60,6 +60,7 @@
                            required
                            placeholder="Enter Card due date">
             </b-form-input>
+
           </b-form-group> -->
           <b-form-group id="exampleInputGroup6" v-if="form.method == 'Credit Card'"
                         label="Due Date:"

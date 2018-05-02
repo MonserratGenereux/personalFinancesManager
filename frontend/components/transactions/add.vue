@@ -191,6 +191,7 @@ h1{
     color: rgba(6, 92, 198, 0.8);
     border-color: rgba(6, 92, 198, 0.8);
 }
+
 select{
     width: 100%;
     height: 30px;
